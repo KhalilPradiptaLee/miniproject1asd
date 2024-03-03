@@ -130,6 +130,7 @@ def menu():
     choice = input("Masukkan Pilihan anda (1-5): ")
     return choice
 
+
 while True:
     choice = menu()
 
@@ -139,12 +140,39 @@ while True:
 ==================================================
 ‖                  TAMBAH PRODUK                 ‖
 ==================================================\n''')
+        
+        print("Pilih lokasi penambahan produk:")
+        print("1. Bagian awal")
+        print("2. Bagian akhir")
+        print("3. Di antara produk")
+        choice_tambah = input("Masukkan Pilihan anda (1-3): ")
+
         id_produk = int(input("Masukkan ID produk: "))
         nama_produk = input("Masukkan nama produk: ")
         harga = float(input("Masukkan harga produk: "))
         stok = int(input("Masukkan stok produk: "))
         rating = str(input("Masukkan rating produk: "))
-        manajemen_produk.tambah_produk(id_produk, nama_produk, harga, stok, rating)
+
+        if choice_tambah == "1":
+            manajemen_produk.linked_list.tambah_di_awal(produk_daging(id_produk, nama_produk, harga, stok, rating))
+            input("\nProduk baru berhasil ditambahkan.")
+            os.system("cls")
+        elif choice_tambah == "2":
+            manajemen_produk.linked_list.tambah_di_akhir(produk_daging(id_produk, nama_produk, harga, stok, rating))
+            input("\nProduk baru berhasil ditambahkan.")
+            os.system("cls")
+        elif choice_tambah == "3":
+            id_sebelumnya = int(input("Masukkan ID produk sebelumnya: "))
+            prev_node = manajemen_produk.linked_list.cari_node(id_sebelumnya)
+            if prev_node:
+                manajemen_produk.linked_list.tambah_di_antara(prev_node, produk_daging(id_produk, nama_produk, harga, stok, rating))
+                input("\nProduk baru berhasil ditambahkan.")
+                os.system("cls")
+            else:
+                print("Produk dengan ID tersebut tidak ditemukan.")
+                input("\nTekan ENTER untuk melanjutkan.")
+                os.system("cls")
+
 
     elif choice == "2":
         os.system("cls")
@@ -155,6 +183,7 @@ while True:
         lihat_produk(manajemen_produk.linked_list)
         input("\nTekan ENTER untuk melanjutkan.")
         os.system("cls")
+
 
     elif choice == "3":
         os.system("cls")
@@ -188,26 +217,48 @@ while True:
             input("\nProduk tidak dapat diperbarui karena tidak terdapatnya id!")
             os.system("cls")
 
+
     elif choice == "4":
         os.system("cls")
         print('''
 ==================================================
 ‖                   HAPUS PRODUK                  ‖
 ==================================================\n''')
-        
         if not manajemen_produk.linked_list.head:
             input("Tidak ada produk yang dapat dihapus.")
             os.system("cls")
         else:
             lihat_produk(manajemen_produk.linked_list)
-            del_input = input("Masukkan produk yang ingin dihapus (tekan ENTER untuk kembali): ")
-            
-            if del_input.strip() == "":
-                os.system("cls")
-            else:
-                id_produk = int(del_input)
-                delete_produk(manajemen_produk.linked_list, id_produk)
+            print("\nPilih lokasi menghapus produk:")
+            print("1. Bagian Awal")
+            print("2. Bagian Akhir")
+            print("3. Menghapus ID tertentu")
+            choice_hapus = input("Masukkan Pilihan anda (1-3): ")
+
+            if choice_hapus == "1":
+                delete_produk(manajemen_produk.linked_list, manajemen_produk.linked_list.head.data.id_produk)
                 input("\nProduk berhasil dihapus.")
+                os.system("cls")
+            elif choice_hapus == "2":
+                current_node = manajemen_produk.linked_list.head
+                prev_node = None
+                while current_node.next:
+                    prev_node = current_node
+                    current_node = current_node.next
+                delete_produk(manajemen_produk.linked_list, current_node.data.id_produk)
+                input("\nProduk berhasil dihapus.")
+                os.system("cls")
+            elif choice_hapus == "3":
+                id_hapus = int(input("Masukkan ID produk yang ingin dihapus: "))
+                if manajemen_produk.linked_list.cari_node(id_hapus) is None:
+                    input("ID produk tidak ditemukan. Tekan ENTER untuk kembali ke menu utama.")
+                    os.system("cls")
+                else:
+                    delete_produk(manajemen_produk.linked_list, id_hapus)
+                    input("\nProduk berhasil dihapus.")
+                    os.system("cls")
+            else:
+                input("Pilihan tidak valid. Tekan ENTER untuk kembali.")
                 os.system("cls")
 
 
